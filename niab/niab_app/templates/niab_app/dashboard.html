@@ -3,60 +3,109 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
-<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold text-[#292E1E] mb-8 text-center">TABLEAU DE BORD</h1>
+    
     <!-- Statistiques hebdomadaires -->
-    <div class="bg-white p-6 rounded-lg shadow">
-        <h2 class="text-xl font-bold mb-4 text-[#292E1E]">Statistiques de la semaine</h2>
+    <div class="bg-white p-6 rounded-lg shadow-lg mb-8 border-l-4 border-[#7F95D1]">
+        <h2 class="text-2xl font-bold mb-6 text-[#292E1E] flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-[#7F95D1]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+            </svg>
+            Statistiques de la semaine
+        </h2>
         {% if weekly_stats %}
-        <div class="grid grid-cols-2 gap-4">
-            <div class="p-4 bg-[#7F95D1] text-white rounded">
-                <p class="text-sm">Revenus</p>
-                <p class="text-2xl">{{ weekly_stats.revenue }}€</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="p-6 bg-gradient-to-r from-[#7F95D1] to-[#6A7FC9] text-white rounded-lg shadow-md">
+                <p class="text-lg font-semibold mb-2">Revenus</p>
+                <p class="text-3xl font-bold">{{ weekly_stats.revenue }}€</p>
+                <p class="text-sm mt-2 opacity-80">Total des revenus hebdomadaires</p>
             </div>
-            <div class="p-4 bg-[#BC8034] text-white rounded">
-                <p class="text-sm">Bénéfices</p>
-                <p class="text-2xl">{{ weekly_stats.profit }}€</p>
+            <div class="p-6 bg-gradient-to-r from-[#BC8034] to-[#A36C2C] text-white rounded-lg shadow-md">
+                <p class="text-lg font-semibold mb-2">Bénéfices</p>
+                <p class="text-3xl font-bold">{{ weekly_stats.profit }}€</p>
+                <p class="text-sm mt-2 opacity-80">Profit net après dépenses</p>
             </div>
-            <div class="p-4 bg-[#A63446] text-white rounded">
-                <p class="text-sm">Taux d'occupation</p>
-                <p class="text-2xl">{{ weekly_stats.occupancy_rate }}%</p>
+            <div class="p-6 bg-gradient-to-r from-[#A63446] to-[#8F2C3C] text-white rounded-lg shadow-md">
+                <p class="text-lg font-semibold mb-2">Taux d'occupation</p>
+                <p class="text-3xl font-bold">{{ weekly_stats.occupancy_rate }}%</p>
+                <p class="text-sm mt-2 opacity-80">Pourcentage de sièges occupés</p>
             </div>
         </div>
         {% else %}
-        <p>Aucune donnée disponible pour cette semaine</p>
+        <div class="bg-gray-100 p-6 rounded-lg text-center">
+            <p class="text-gray-600">Aucune donnée disponible pour cette semaine</p>
+        </div>
         {% endif %}
     </div>
 
     <!-- Films en cours de projection -->
-    <div class="bg-white p-6 rounded-lg shadow">
-        <h2 class="text-xl font-bold mb-4 text-[#292E1E]">Films en cours</h2>
-        {% for screening in current_screenings %}
-        <div class="mb-4 p-4 border rounded">
-            <h3 class="font-bold">{{ screening.film.titre_fr }}</h3>
-            <p>Salle {{ screening.numero_salle }}</p>
-            <p>Entrées estimées: {{ screening.audience_quotidienne_estimee }}</p>
+    <div class="bg-white p-6 rounded-lg shadow-lg mb-8 border-l-4 border-[#A63446]">
+        <h2 class="text-2xl font-bold mb-6 text-[#292E1E] flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-[#A63446]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+            </svg>
+            Films en cours
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {% for screening in current_screenings %}
+            <div class="bg-white p-4 border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow">
+                <div class="flex justify-between items-start mb-2">
+                    <h3 class="font-bold text-lg text-[#292E1E]">{{ screening.film.titre_fr }}</h3>
+                    <span class="bg-[#A63446] text-white text-xs px-2 py-1 rounded-full">Salle {{ screening.numero_salle }}</span>
+                </div>
+                <p class="text-gray-600 mb-2">{{ screening.film.categorie }}</p>
+                <div class="flex justify-between items-center mt-4 pt-2 border-t border-gray-100">
+                    <div>
+                        <p class="text-sm text-gray-500">Entrées estimées</p>
+                        <p class="font-bold text-[#292E1E]">{{ screening.audience_quotidienne_estimee }}</p>
+                    </div>
+                    <a href="{% url 'film_detail' screening.film.pk %}" class="text-[#7F95D1] hover:text-[#A63446] font-medium">
+                        Détails →
+                    </a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-span-full bg-gray-100 p-6 rounded-lg text-center">
+                <p class="text-gray-600">Aucun film en cours de projection</p>
+            </div>
+            {% endfor %}
         </div>
-        {% empty %}
-        <p>Aucun film en cours de projection</p>
-        {% endfor %}
     </div>
 
     <!-- Prochaines sorties -->
-    <div class="col-span-1 md:col-span-2 bg-white p-6 rounded-lg shadow">
-        <h2 class="text-xl font-bold mb-4 text-[#292E1E]">Prochaines sorties</h2>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div class="bg-white p-6 rounded-lg shadow-lg border-l-4 border-[#BC8034]">
+        <h2 class="text-2xl font-bold mb-6 text-[#292E1E] flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-[#BC8034]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            Prochaines sorties
+        </h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {% for movie in upcoming_movies %}
-            <div class="border p-4 rounded hover:shadow-lg transition-shadow">
-                <h3 class="font-bold">{{ movie.titre_fr }}</h3>
-                <p class="text-sm text-gray-600">Sortie le {{ movie.date|date:"d/m/Y" }}</p>
-                <p>Entrées prévues: {{ movie.entrees_prevues|default:"Non calculé" }}</p>
-                <a href="{% url 'film_detail' movie.pk %}" 
-                   class="mt-2 inline-block bg-[#7F95D1] text-white px-4 py-2 rounded">
-                    Détails
-                </a>
+            <div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+                <div class="p-4">
+                    <h3 class="font-bold text-lg text-[#292E1E] mb-2">{{ movie.titre_fr }}</h3>
+                    <div class="flex items-center mb-3">
+                        <span class="bg-[#BC8034] text-white text-xs px-2 py-1 rounded-full mr-2">{{ movie.categorie }}</span>
+                        <span class="text-sm text-gray-600">{{ movie.duree_minutes }} min</span>
+                    </div>
+                    <p class="text-sm text-gray-600 mb-2">
+                        <span class="font-semibold">Sortie le:</span> {{ movie.date|date:"d/m/Y" }}
+                    </p>
+                    <p class="text-sm text-gray-600 mb-4">
+                        <span class="font-semibold">Entrées prévues:</span> {{ movie.entrees_prevues|default:"Non calculé" }}
+                    </p>
+                    <a href="{% url 'film_detail' movie.pk %}" 
+                       class="block w-full text-center bg-[#7F95D1] hover:bg-[#6A7FC9] text-white px-4 py-2 rounded-md transition-colors">
+                        Voir les détails
+                    </a>
+                </div>
             </div>
             {% empty %}
-            <p>Aucune sortie prévue</p>
+            <div class="col-span-full bg-gray-100 p-6 rounded-lg text-center">
+                <p class="text-gray-600">Aucune sortie prévue</p>
+            </div>
             {% endfor %}
         </div>
     </div>
