@@ -14,15 +14,18 @@
                 Découvrez les meilleurs films et optimisez votre expérience cinéma grâce à notre outil intelligent.
             </p>
             <div class="space-x-4">
-                <a href="{% url 'dashboard' %}" class="bg-[#7F95D1] text-white px-6 py-3 rounded-lg shadow hover:bg-[#A63446] transition">
-                    Accéder au tableau de bord
-                </a>
-                <a href="{% url 'film_list' %}" class="bg-[#BC8034] text-white px-6 py-3 rounded-lg shadow hover:bg-[#292E1E] transition">
-                    Voir les films
-                </a>
-                <a href="{% url 'login' %}" class="bg-[#A63446] text-white px-6 py-3 rounded-lg shadow hover:bg-[#7F95D1] transition">
-                    Connexion
-                </a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="bg-[#7F95D1] text-white px-6 py-3 rounded-lg shadow hover:bg-[#A63446] transition">
+                        Accéder au tableau de bord
+                    </a>
+                    <a href="{% url 'film_list' %}" class="bg-[#BC8034] text-white px-6 py-3 rounded-lg shadow hover:bg-[#292E1E] transition">
+                        Voir les films
+                    </a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="bg-[#A63446] text-white px-6 py-3 rounded-lg shadow hover:bg-[#7F95D1] transition">
+                        Connexion
+                    </a>
+                {% endif %}
             </div>
         </div>
     </div>

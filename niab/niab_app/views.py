@@ -2,12 +2,33 @@ from django.shortcuts import render
 
 # niab_app/views.py
 
+from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.views import LoginView
+from django.contrib.auth import logout
+from django.urls import reverse_lazy
 from django.db.models import Sum
-from .models import Film, Projection, RapportHebdomadaire
 from django.utils import timezone
 from datetime import timedelta
+from .models import Film, Projection, RapportHebdomadaire
+
+class CustomLoginView(LoginView):
+    template_name = 'niab_app/login.html'
+    success_url = reverse_lazy('dashboard')
+
+    def get(self, request, *args, **kwargs):
+        # Rediriger les utilisateurs déjà connectés
+        if request.user.is_authenticated:
+            return redirect('dashboard')
+        return super().get(request, *args, **kwargs)
+
+# def custom_logout(request):
+#     logout(request)
+#     return redirect('login')
+def custom_logout(request):
+    logout(request)
+    return redirect('home')  # Rediriger vers la page d'accueil au lieu de 'login'
 
 class HomePageView(TemplateView):
     template_name = 'niab_app/home.html'
@@ -47,12 +68,12 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 
 class FilmListView(LoginRequiredMixin, ListView):
     model = Film
-    template_name = 'niab_app/film_list.html'  # Renommez ce fichier
-    context_object_name = 'films'  # Changez cette variable
+    template_name = 'niab_app/film_list.html'  
+    context_object_name = 'films'  
     ordering = ['-date']
     paginate_by = 10
 
 class FilmDetailView(LoginRequiredMixin, DetailView):
     model = Film
-    template_name = 'niab_app/film_detail.html'  # Renommez ce fichier
-    context_object_name = 'film'  # Ajoutez cette ligne
+    template_name = 'niab_app/film_detail.html'  
+    context_object_name = 'film'  
