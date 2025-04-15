@@ -1,0 +1,96 @@
+<!-- niab_app/templates/niab_app/home.html -->
+{% extends 'niab_app/base.html' %}
+{% load static %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block content %}
+<div class="bg-[#FBFEF9] min-h-screen">
+    <!-- Section principale -->
+    <div class="bg-[#292E1E] text-white py-20">
+        <div class="container mx-auto text-center">
+            <h1 class="text-5xl font-bold mb-6"><span class="text-[#A63446]">New is Always Better</span></h1>
+            <p class="text-lg mb-8">
+                Découvrez les meilleurs films et optimisez votre expérience cinéma grâce à notre outil intelligent.
+            </p>
+            <div class="space-x-4">
+                <a href="{% url 'dashboard' %}" class="bg-[#7F95D1] text-white px-6 py-3 rounded-lg shadow hover:bg-[#A63446] transition">
+                    Accéder au tableau de bord
+                </a>
+                <a href="{% url 'film_list' %}" class="bg-[#BC8034] text-white px-6 py-3 rounded-lg shadow hover:bg-[#292E1E] transition">
+                    Voir les films
+                </a>
+                <a href="{% url 'login' %}" class="bg-[#A63446] text-white px-6 py-3 rounded-lg shadow hover:bg-[#7F95D1] transition">
+                    Connexion
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section à propos -->
+    <div class="container mx-auto py-16 px-4">
+        <h2 class="text-3xl font-bold text-center text-[#292E1E] mb-8">À propos de notre projet</h2>
+        
+        <!-- Image en long au-dessus du texte -->
+        <div class="mb-8">
+            <img src="{% static 'niab_app/images/cinema.jpg' %}" alt="Cinéma" class="w-full h-64 object-cover rounded-lg shadow-lg">
+        </div>
+        
+        <!-- Contenu texte -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div>
+                <h3 class="text-2xl font-bold text-[#A63446] mb-4">Notre mission</h3>
+                <p class="text-gray-600">
+                    Nous aidons les cinémas à optimiser leur programmation en utilisant l'intelligence artificielle pour prédire la fréquentation des films. Notre outil permet de maximiser les revenus tout en offrant une expérience unique aux spectateurs.
+                </p>
+            </div>
+            <div>
+                <h3 class="text-2xl font-bold text-[#BC8034] mb-4">Notre approche</h3>
+                <p class="text-gray-600">
+                    Grâce à des algorithmes avancés et l'analyse de données historiques, nous proposons des recommandations personnalisées pour chaque cinéma. Notre plateforme intuitive permet une prise de décision éclairée et rapide.
+                </p>
+            </div>
+        </div>
+    </div>                  
+
+    <!-- Section des fonctionnalités -->
+    <div class="bg-[#FBFEF9] py-16">
+        <div class="container mx-auto text-center">
+            <h2 class="text-3xl font-bold text-[#292E1E] mb-8">Fonctionnalités principales</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="p-6 bg-white rounded-lg shadow">
+                    <h3 class="text-xl font-bold text-[#7F95D1] mb-4">Prédictions intelligentes</h3>
+                    <p class="text-gray-600">
+                        Utilisez notre algorithme pour prédire la fréquentation des films et optimiser votre programmation.
+                    </p>
+                </div>
+                <div class="p-6 bg-white rounded-lg shadow">
+                    <h3 class="text-xl font-bold text-[#A63446] mb-4">Tableau de bord</h3>
+                    <p class="text-gray-600">
+                        Suivez vos performances hebdomadaires et analysez vos résultats en un coup d'œil.
+                    </p>
+                </div>
+                <div class="p-6 bg-white rounded-lg shadow">
+                    <h3 class="text-xl font-bold text-[#BC8034] mb-4">Gestion simplifiée</h3>
+                    <p class="text-gray-600">
+                        Gérez vos films, vos projections et vos rapports financiers facilement depuis une interface intuitive.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Section contact -->
+    <div class="bg-[#292E1E] text-white py-16">
+        <div class="container mx-auto text-center">
+            <h2 class="text-3xl font-bold mb-6">Contactez-nous</h2>
+            <p class="text-lg mb-8">
+                Vous avez des questions ou souhaitez en savoir plus ? Contactez notre équipe dès aujourd'hui !
+            </p>
+            <a href="mailto:contact@newisalwaysbetter.com" class="bg-[#A63446] text-white px-6 py-3 rounded-lg shadow hover:bg-[#7F95D1] transition">
+                Envoyer un e-mail
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

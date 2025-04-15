@@ -1,0 +1,31 @@
+{% extends 'niab_app/base.html' %}
+
+{% block title %}{{ film.titre_fr }}{% endblock %}
+
+{% block content %}
+<div class="bg-white p-6 rounded-lg shadow">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+            <h1 class="text-2xl font-bold mb-4">{{ film.titre_fr }}</h1>
+            <p class="text-gray-600">{{ film.titre_original }}</p>
+            <div class="mt-4 space-y-2">
+                <p><strong>Pays:</strong> {{ film.pays }}</p>
+                <p><strong>Catégorie:</strong> {{ film.categorie }}</p>
+                <p><strong>Date de sortie:</strong> {{ film.date|date:"d/m/Y" }}</p>
+                <p><strong>Durée:</strong> {{ film.duree_minutes }} minutes</p>
+                <p><strong>Classification:</strong> {{ film.PEGI }}</p>
+            </div>
+        </div>
+        <div>
+            <h2 class="text-xl font-bold mb-4">Performances</h2>
+            <div class="space-y-2">
+                <p><strong>Budget:</strong> {{ film.budget|default:"Non communiqué" }}€</p>
+                <p><strong>Box-office:</strong> {{ film.recettes_box_office|default:"Non communiqué" }}€</p>
+                <p><strong>Entrées prévues:</strong> {{ film.entrees_prevues|default:"Non calculé" }}</p>
+                <p><strong>Entrées réelles:</strong> {{ film.entrees_totales|default:"Non disponible" }}</p>
+                <p><strong>Rentabilité:</strong> {{ film.rentabilite|default:"Non calculée" }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

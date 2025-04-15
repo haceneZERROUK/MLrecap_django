@@ -1,0 +1,30 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New is Always Better - {% block title %}{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-[#FBFEF9]">
+    <nav class="bg-[#292E1E] text-white p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">New is Always Better</h1>
+            <div class="space-x-4">
+                <a href="{% url 'dashboard' %}" class="hover:text-[#7F95D1]">Dashboard</a>
+                <a href="{% url 'film_list' %}" class="hover:text-[#7F95D1]">Films</a>
+                {% if user.is_authenticated %}
+                    <span>{{ user.username }}</span>
+                    <a href="{% url 'logout' %}" class="text-[#A63446]">Déconnexion</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto p-4">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>
