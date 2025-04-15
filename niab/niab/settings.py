@@ -86,7 +86,7 @@ DATABASES = {
 
 # Authentication settings
 AUTH_USER_MODEL = 'niab_app.User'
-LOGIN_REDIRECT_URL = 'dashboard'
+LOGIN_REDIRECT_URL = 'home'
 LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = 'login'
 

@@ -15,12 +15,12 @@ from .models import Film, Projection, RapportHebdomadaire
 
 class CustomLoginView(LoginView):
     template_name = 'niab_app/login.html'
-    success_url = reverse_lazy('dashboard')
+    success_url = reverse_lazy('home')
 
     def get(self, request, *args, **kwargs):
         # Rediriger les utilisateurs déjà connectés
         if request.user.is_authenticated:
-            return redirect('dashboard')
+            return redirect('home')
         return super().get(request, *args, **kwargs)
 
 # def custom_logout(request):
