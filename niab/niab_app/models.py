@@ -1,5 +1,8 @@
 from django.db import models
 import datetime
+from django.contrib.auth.models import AbstractUser
+import django
+
 
 # Create your models here.
 
@@ -26,10 +29,13 @@ class Movie(models.Model) :
     allocine_url =  models.URLField(max_length=500, null=True, blank=True, verbose_name="URL allocine")
     image_url = models.URLField(max_length=500, null=True, blank=True, verbose_name="URL de l'image")
     trailer_url = models.URLField(max_length=500, null=True, blank=True, verbose_name="URL de la bande-annonce")
-    creation_date = models.DateField(default=datetime.date.today())
+    creation_date = models.DateField(default=django.utils.timezone.now)
     
 
-
+class User(AbstractUser) : 
+    first_name = models.CharField(max_length=150, blank=True)
+    last_name = models.CharField(max_length=150, blank=True)
+    email = models.EmailField(unique=True)
 
 
 

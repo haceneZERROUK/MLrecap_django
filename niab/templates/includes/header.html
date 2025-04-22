@@ -24,6 +24,7 @@
                 </div>
 
                 <!-- Navigation principale -->
+                {% if user.is_authenticated %}
                 <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
                     <a href="{% url 'dashboard' %}" 
                        class="text-gray-300 hover:text-purple-400 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-purple-400 transition-colors">
@@ -37,11 +38,13 @@
             </div>
 
             <!-- Navigation Droite -->
-             {% if user.is_authenticated %}
-                <div class="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
-                    <button class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
-                        Déconnexion
-                        </button>
+                    <div class="hidden sm:ml-6 sm:flex sm:items-center sm:space-x-4">
+                        <form action="{% url 'logout' %}" method="post" class="m-0">
+                            {% csrf_token %}
+                            <button type="submit" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                                Déconnexion
+                            </button>
+                        </form>
                     </div>
                 {% endif %}
 
@@ -82,23 +85,35 @@
     </div>
 
     <!-- Menu Mobile Panel -->
-    <div class="sm:hidden hidden" id="mobile-menu">
-        <div class="pt-2 pb-3 space-y-1">
-            <a href="{% url 'dashboard' %}" 
-               class="text-gray-300 hover:text-purple-400 block px-3 py-2 hover:bg-gray-700 transition-colors">
-                Dashboard
-            </a>
-            <a href="#" 
-               class="text-gray-300 hover:text-purple-400 block px-3 py-2 hover:bg-gray-700 transition-colors">
-                Prédictions
-            </a>
-            <div class="px-3 py-2">
-                <button class="w-full bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
-                    Deconnexion
-                </button>
+    {% if user.is_authenticated %}
+        <div class="sm:hidden hidden" id="mobile-menu">
+            <div class="pt-2 pb-3 space-y-1">
+                <a href="{% url 'dashboard' %}" 
+                class="text-gray-300 hover:text-purple-400 block px-3 py-2 hover:bg-gray-700 transition-colors">
+                    Dashboard
+                </a>
+                <a href="#" 
+                class="text-gray-300 hover:text-purple-400 block px-3 py-2 hover:bg-gray-700 transition-colors">
+                    Prédictions
+                </a>
+                <div class="px-3 py-2">
+                    <button class="w-full bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                        Deconnexion
+                    </button>
+                </div>
             </div>
         </div>
+    {% else %}
+    <div class="sm:hidden hidden" id="mobile-menu">
+        <div class="pt-2 pb-3 space-y-1">
+            <a href="{% url 'homepage' %}" 
+            class="text-gray-300 hover:text-purple-400 block px-3 py-2 hover:bg-gray-700 transition-colors">
+                Page d'accueil
+            </a>
+        </div>
     </div>
+
+    {% endif %}
 </nav>
 
 <script>

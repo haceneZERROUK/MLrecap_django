@@ -1,5 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import View, ListView, FormView, TemplateView
+from django.contrib.auth.views import LoginView, PasswordResetView
+from django.contrib.auth import logout
+from django.urls import reverse_lazy
 from .models import Movie
 from dotenv import load_dotenv
 import os
@@ -59,9 +62,10 @@ class DashboardView(View) :
     
 class HomePageView(View):
     template_name = "homepage.html"
+    context_object_name = "homepage"
+    
 
     def get(self, request):
-        # Récupérer les films programmés et les trier par salle
         on_view_movies = Movie.objects.filter(programmed=True).order_by('programmed_room')
 
         context = {
@@ -71,3 +75,18 @@ class HomePageView(View):
         return render(request, self.template_name, context)
 
 
+class MyLoginView(LoginView) : 
+    
+    template_name = "login.html"
+    context_object_name = "login"
+    
+    redirect_authenticated_user = True
+    success_url = reverse_lazy("dashboard")
+
+    def get_success_url(self) : 
+        return self.success_url
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('homepage')
