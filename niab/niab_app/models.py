@@ -23,8 +23,9 @@ class Movie(models.Model) :
     programmed_room = models.IntegerField(choices=[(1, "Salle 1"), (2, "Salle 2")], null=True)
     programmation_start_date = models.DateField(null=True)
     programmation_end_date = models.DateField(null=True)
-    allocine_url = models.CharField(null=True)
-    image_url = models.CharField(null=True)
+    allocine_url =  models.URLField(max_length=500, null=True, blank=True, verbose_name="URL allocine")
+    image_url = models.URLField(max_length=500, null=True, blank=True, verbose_name="URL de l'image")
+    trailer_url = models.URLField(max_length=500, null=True, blank=True, verbose_name="URL de la bande-annonce")
     creation_date = models.DateField(default=datetime.date.today())
     
 

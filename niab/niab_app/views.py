@@ -57,17 +57,17 @@ class DashboardView(View) :
         return redirect("dashboard")
     
     
-class HomePageView(View) : 
-    
+class HomePageView(View):
     template_name = "homepage.html"
-    context_object_name = "homepage"
 
-    def get(self, request) : 
+    def get(self, request):
+        # Récupérer les films programmés et les trier par salle
+        on_view_movies = Movie.objects.filter(programmed=True).order_by('programmed_room')
+
+        context = {
+            "on_view_movies": on_view_movies, 
+        }
         
-        on_view_movies = Movie
-        context = {"movies_list" : movies_list}
         return render(request, self.template_name, context)
-
-
 
 
