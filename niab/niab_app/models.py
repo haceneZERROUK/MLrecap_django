@@ -1,4 +1,5 @@
 from django.db import models
+import datetime
 
 # Create your models here.
 
@@ -19,11 +20,12 @@ class Movie(models.Model) :
     weekly_entrances_pred = models.IntegerField(null=True)
     synopsis = models.TextField(null=True)
     programmed = models.BooleanField(default=False)
-    programmed_room = models.IntegerField(choices=[(1, "Room 1"), (2, "Room 2")], null=True)
+    programmed_room = models.IntegerField(choices=[(1, "Salle 1"), (2, "Salle 2")], null=True)
     programmation_start_date = models.DateField(null=True)
     programmation_end_date = models.DateField(null=True)
     allocine_url = models.CharField(null=True)
     image_url = models.CharField(null=True)
+    creation_date = models.DateField(default=datetime.date.today())
     
 
 
