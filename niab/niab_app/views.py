@@ -21,13 +21,13 @@ class DashboardView(View) :
     context_object_name = "dashboard"
     
     def get(self, request):
-        # D'abord récupérer tous les films programmés pour avoir les salles occupées
+        # récupérer tous les films programmés pour avoir les salles occupées
         all_movies = Movie.objects.all()
         programmed_movies = all_movies.filter(programmed=True)
         programmed_count = programmed_movies.count()
         occupied_rooms = [movie.programmed_room for movie in programmed_movies if movie.programmed_room is not None]
 
-        # Ensuite récupérer les 10 derniers films
+        # récupérer les 10 derniers films
         movies_list = all_movies.order_by('-creation_date')[:10]
 
         context = {
@@ -66,15 +66,14 @@ class HomePageView(View):
     template_name = "homepage.html"
     context_object_name = "homepage"
     
-
     def get(self, request):
-        on_view_movies = Movie.objects.filter(programmed=True).order_by('programmed_room')
+        on_view_movies = Movie.objects.filter(programmed=True).order_by('-creation_date')[:2]
 
         context = {
-            "on_view_movies": on_view_movies, 
+            "on_view_movies": on_view_movies,
         }
-        
         return render(request, self.template_name, context)
+
 
 
 class MyLoginView(LoginView) : 
