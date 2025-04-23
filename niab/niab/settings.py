@@ -104,6 +104,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'niab_app.views.EmailOrUsernameModelBackend',  # Remplacez par le chemin correct
+    'django.contrib.auth.backends.ModelBackend',      # Backend par défaut
+]
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
@@ -134,4 +139,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 AUTH_USER_MODEL = 'niab_app.User'
 LOGOUT_REDIRECT_URL = 'homepage'
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'  # Ou votre serveur SMTP
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'alghom.ia@gmail.com'
+EMAIL_HOST_PASSWORD = 'wosdxtiuxexloijz'
 

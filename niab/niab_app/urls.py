@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import DashboardView, HomePageView, MyLoginView
+from .views import DashboardView, HomePageView, MyLoginView, ContactView
 from django.contrib.auth import views as auth_views
 from django.views.generic import TemplateView
 from django.urls import reverse_lazy
@@ -32,6 +32,8 @@ urlpatterns = [
     ), name='password_reset_complete'),
 
     path("logout/", auth_views.LogoutView.as_view(next_page="homepage"), name="logout"),
+    
+    path('contact/', ContactView.as_view(), name='contact'),  
     
     
 ]

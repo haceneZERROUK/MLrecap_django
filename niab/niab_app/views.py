@@ -1,7 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.generic import View, ListView, FormView, TemplateView
 from django.contrib.auth.views import LoginView, PasswordResetView
-from django.contrib.auth import logout
+from django.contrib.auth import logout, get_user_model
+from django.contrib.auth.backends import ModelBackend
+from django.db import models
 from django.urls import reverse_lazy
 from .models import Movie
 from dotenv import load_dotenv
@@ -90,3 +92,53 @@ class MyLoginView(LoginView) :
 def logout_view(request):
     logout(request)
     return redirect('homepage')
+
+
+
+class ContactView(View) : 
+    
+    template_name = "contact.html"
+    context_object_name = "contact"
+
+    def get(self, request) : 
+        
+        return render(request, self.template_name)
+        pass
+    
+    def post(self, request) : 
+        
+        pass
+
+
+
+UserModel = get_user_model()
+
+class EmailOrUsernameModelBackend(ModelBackend):
+    """
+    Authentifie avec le username OU l'email.
+    """
+    def authenticate(self, request, username=None, password=None, **kwargs):
+        if username is None:
+            username = kwargs.get(UserModel.USERNAME_FIELD)
+        try:
+            # Cherche un utilisateur avec username OU email
+            user = UserModel.objects.get(
+                models.Q(username__iexact=username) | models.Q(email__iexact=username)
+            )
+        except UserModel.DoesNotExist:
+            # Pas d'utilisateur trouvé
+            return None
+        else:
+            if user.check_password(password) and self.user_can_authenticate(user):
+                return user
+        return None
+
+
+
+
+
+# page de PREDICTIONS
+# configurer l'appli pour la réinitialisation
+# configurer la connexion à l'api pour les prédictions et les envoyer dans la BDD
+
+
