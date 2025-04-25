@@ -9,16 +9,16 @@ import django
 
 class Movie(models.Model) : 
     
-    fr_title = models.TextField()
-    original_title = models.CharField()
-    released_date = models.DateField()
+    fr_title = models.CharField(max_length=100)
+    original_title = models.CharField(max_length=100)
+    released_date = models.DateField(null=False)
     casting = models.TextField()
-    director = models.CharField()
-    writer = models.CharField()
-    distribution = models.CharField()
-    country = models.CharField()
-    classification = models.CharField()
-    duration = models.CharField()
+    director = models.CharField(max_length=100)
+    writer = models.CharField(max_length=100)
+    distribution = models.CharField(max_length=100)
+    country = models.CharField(max_length=100)
+    classification = models.CharField(max_length=100)
+    duration = models.CharField(max_length=100)
     categories = models.TextField()                     # scraping récupérer toutes les catégories
     weekly_entrances_pred = models.IntegerField(null=True)
     synopsis = models.TextField(null=True)
@@ -29,7 +29,7 @@ class Movie(models.Model) :
     allocine_url =  models.URLField(max_length=500, null=True, blank=True, verbose_name="URL allocine")
     image_url = models.URLField(max_length=500, null=True, blank=True, verbose_name="URL de l'image")
     trailer_url = models.URLField(max_length=500, null=True, blank=True, verbose_name="URL de la bande-annonce")
-    creation_date = models.DateField(default=django.utils.timezone.now)
+    creation_date = models.DateField(auto_now_add=True)
     
 
 class User(AbstractUser) : 

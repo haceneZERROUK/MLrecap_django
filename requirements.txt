@@ -1,3 +1,9 @@
 django
 dotenv
 django-widget-tweaks
+gunicorn
+mysqlclient
+mysql-connector-python
+whitenoise
+azure-identity
+azure-storage-blob 

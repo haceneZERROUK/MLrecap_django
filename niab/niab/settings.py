@@ -12,21 +12,33 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(dotenv_path=BASE_DIR.parent / '.env')
+
+DATABASE_NAME = os.getenv("DATABASE_NAME", None)
+DATABASE_USERNAME = os.getenv("DATABASE_USERNAME", None)
+DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD", None)
+DATABASE_HOST = os.getenv("DATABASE_HOST", None)
+DATABASE_PORT = os.getenv("DATABASE_PORT", "3306")
+
+
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-h_$$*6^l2qtnt-t*m47#b#$b3w6)!x3)z3nth8w*fwe%g1t^vx'
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", None)
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
@@ -45,12 +57,14 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'niab.urls'
@@ -78,10 +92,24 @@ WSGI_APPLICATION = 'niab.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default" : {
+        "ENGINE" : "django.db.backends.mysql",
+        "NAME" : DATABASE_NAME, 
+        "USER" : DATABASE_USERNAME, 
+        "PASSWORD" : DATABASE_PASSWORD, 
+        "HOST" : DATABASE_HOST, 
+        "PORT" : DATABASE_PORT, 
+        "OPTIONS": {
+            "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
+        }
     }
 }
 

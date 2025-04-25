@@ -78,7 +78,7 @@ class HomePageView(View):
 
 class MyLoginView(LoginView) : 
     
-    template_name = "login.html"
+    template_name = "registration/login.html"
     context_object_name = "login"
     
     redirect_authenticated_user = True
@@ -136,8 +136,5 @@ class EmailOrUsernameModelBackend(ModelBackend):
 
 
 
-# page de PREDICTIONS
-# configurer l'appli pour la réinitialisation
-# configurer la connexion à l'api pour les prédictions et les envoyer dans la BDD
 
 
