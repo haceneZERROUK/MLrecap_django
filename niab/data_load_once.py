@@ -14,7 +14,7 @@ from niab_app.models import Movie
 from django.db import transaction
 from niab_app.api_functions import api_prediction
 
-
+# Chargement des variables d'environnement
 dot_env_path = find_dotenv()
 load_dotenv(dotenv_path=dot_env_path, override=True)
 
@@ -22,8 +22,6 @@ account_name = os.getenv("ACCOUNT_NAME")
 account_key = os.getenv("ACCOUNT_KEY")
 container_name = os.getenv("CONTAINER_NAME")
 blob_name = os.getenv("saving_file")
-
-
 
 def load_insert_data() : 
 
@@ -103,23 +101,12 @@ def load_insert_data() :
 
     print("Import terminé !")
 
-###########################################################################
-
-
-# schedule.every().thursday.at("06:30").do(load_insert_data)
-
-# while True:
-#     schedule.run_pending()
-#     time.sleep(60)  
-
-if __name__ == "__main__" :
-    load_insert_data()
-
-
-
-
-
-
-
-
-
+# Exécution de la fonction une seule fois, puis exit
+if __name__ == "__main__":
+    try:
+        print("Démarrage du chargement initial des données...")
+        load_insert_data()
+        print("Chargement initial terminé avec succès")
+    except Exception as e:
+        print(f"Erreur lors du chargement initial : {e}")
+        # On ne fait pas exit(1) pour permettre à l'entrypoint de continuer

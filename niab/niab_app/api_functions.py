@@ -1,141 +1,86 @@
-# import os
-# from dotenv import load_dotenv, find_dotenv
-# import request
-# import json
+import os
+from dotenv import load_dotenv, find_dotenv, set_key
+import requests
+import json
 
 
 
-# dot_env_path = find_dotenv()
-# load_dotenv(dotenv_path=dot_env_path)
+dot_env_path = find_dotenv()
+load_dotenv(dotenv_path=dot_env_path, override=True)
 
-# EMAIL = os.getenv("EMAIL", None)
-# PASSWORD = os.getenv("PASSWORD", None)
-# API_URL = os.getenv("API_URL", None)
+USERNAME = os.getenv("USERNAME", None)
+EMAIL = os.getenv("EMAIL", None)
+PASSWORD = os.getenv("PASSWORD", None)
+API_URL = os.getenv("API_URL", None)
 
 
-# def get_token(api:str = API_URL, email:str = EMAIL, password:str = PASSWORD) -> dict: 
+def get_token(api:str = API_URL, email:str = USERNAME, password:str = PASSWORD) -> dict: 
     
-#     api_login_url = api+"/login/"
-#     headers = {
-#         "accept" : "application/json", 
-#         "Content-Type" : "application/json"
-#     }
-#     data = {
-#         "email" : email, 
-#         "password" : password
-#     }
-#     token_response = request.post(url = api_login_url, headers = headers, data = data)
-#     return token_response    
+    api_login_url = api+"/login"
+    headers = {
+        "accept" : "application/json", 
+        "Content-Type" : "application/x-www-form-urlencoded"
+    }
+    data = {
+        'grant_type': 'password',
+        'username': email,
+        'password': password,
+        'scope': '',
+        'client_id': 'string',
+        'client_secret': 'string'
+    }
+    token_response = requests.post(url = api_login_url, headers = headers, data = data)
+    if token_response.status_code == 200:
+        return token_response.json()["access_token"]
+    else:
+        try:
+            detail = token_response.json().get("detail", token_response.text)
+        except ValueError:
+            detail = token_response.text
+        raise Exception(f"Erreur API : {token_response.status_code} - {detail}")
 
 
-# def api_prediction(movie : dict, token:str = TOKEN, api:str = API_URL) -> dict: 
+
+def api_prediction(movie : list[dict], api:str = API_URL) -> dict: 
     
-#     api_predict_url = api+"/predict/"
-#     headers = {
-#         "accept" : "application/json", 
-#         "Content-Type" : "application/json", 
-#         "Authorization" : f"Bearer{token}"
-#     }
-#     data = {**movie}
-#     prediction_response = request.post(url = api_predict_url, headers = headers, data = data)
-#     if prediction_response.code == 200 : 
-#         return prediction_response
-#     else : 
-#         token = get_token()
-#         headers = {
-#             "accept" : "application/json", 
-#             "Content-Type" : "application/json", 
-#             "Authorization" : f"Bearer{token}"
-#         }
-#         prediction_response = request.post(url = api_predict_url, headers = headers, data = data)
-#         return prediction_response
+    TOKEN = os.getenv("ACCESS_TOKEN", None)
+    api_predict_url = api+"/predictions"
+    
+    try :
+        headers = {
+            "accept" : "application/json", 
+            "Content-Type" : "application/json", 
+            "Authorization" : f"Bearer {TOKEN}"
+        }
         
-#     MOVIES_FILE = os.getenv("MOVIES_FILE_PATH", "niab/.env")
-    
-    
-# def weekly_prediction(self) -> list : 
-    
-#     predictions = []
-#     with open(self.MOVIES_FILE) as file : 
-#         movies = json.load(file)
-    
-#     variables = ['fr_title', 'released_year', 'directors', 'writer', 'distribution', 'country', 'budget', 'category', 'released_date', 'classification', 'duration', 'weekly_entrances', 'duration_minutes', 'actor_1', 'actor_2', 'actor_3']
-    
-#     movies_with_preds = []
-    
-#     for m in movies : 
-#         fr_title = m["fr_title"]
-#         original_title = m["original_title"]
-#         released_date = m["released_date"]
-#         casting = [m["actor_1"], m["actor_2"], m["actor_3"]]
-#         director = m["directors"]
-#         writer = m["writer"]
-#         distribution = m["distribution"]
-#         country = m["country"]
-#         classification = m["classification"]
-#         duration = m["duration"]
-#         categories = m["categories"]
-#         synopsis = m["synopsis"]
-#         image_url = m["image_url"]
-#         allocine_url = m["allocine_url"]
+        response = requests.post(url = api_predict_url, headers = headers, json = movie)
         
-#         pred_data = {v : m.get(v) for v in variables}
-#         prediction = api_prediction(**pred_data)
-#         weekly_entrances_pred = prediction
+        if response.status_code == 200 : 
+            return response.json()["result"]
         
-#         movies_with_preds.append({
-#             "fr_title" : fr_title, 
-#             "original_title" : original_title, 
-#             "released_date" : released_date, 
-#             "casting" : casting, 
-#             "director" : director, 
-#             "writer" : writer, 
-#             "distribution" : distribution, 
-#             "country" : country, 
-#             "classification" : classification, 
-#             "duration" : duration, 
-#             "categories" : categories, 
-#             "weekly_entrances_pred" : weekly_entrances_pred, 
-#             "synopsis" : synopsis, 
-#             "allocine_url" : allocine_url, 
-#             "image_url" : image_url
-#         })
+        else : 
+            new_token = get_token()
+            set_key(dot_env_path, "ACCESS_TOKEN", new_token, quote_mode="never")
+            headers["Authorization"] = f"Bearer {new_token}"
+            
+            response = requests.post(url = api_predict_url, headers = headers, json=movie)
+            if response.status_code == 200 :
+                return response.json()["result"]
+            else : 
+                raise Exception(f"Erreur API : {response.status_code} - {response.text}")
         
-#         movie_to_save = Movie(
-#             fr_title = fr_title, 
-#             original_title = original_title, 
-#             released_date = released_date, 
-#             casting = casting, 
-#             director = director, 
-#             writer = writer, 
-#             distribution = distribution, 
-#             country = country, 
-#             classification = classification, 
-#             duration = duration, 
-#             categories = categories, 
-#             weekly_entrances_pred = weekly_entrances_pred, 
-#             synopsis = synopsis, 
-#             allocine_url = allocine_url, 
-#             image_url = image_url
-#         )
-#         movie_to_save.save()
+    except Exception as e : 
+        raise Exception(f"Erreur lors de la requête: {str(e)}")
+
+
+
+if __name__ == "__main__" : 
+    token = get_token()
+    print(token)
     
-#     return movies_with_preds
-
+    with open("niab/upcomes.json", "r") as file : 
+        movies = json.load(file)
         
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    pred = api_prediction(movies)
+    print(len(pred))
+    print(pred[0])

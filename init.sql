@@ -1,4 +1,0 @@
-CREATE DATABASE IF NOT EXISTS top_movies;
-CREATE USER 'niab_admin'@'%' IDENTIFIED BY 'Admin123456+';
-GRANT ALL PRIVILEGES ON top_movies.* TO 'niab_admin'@'%';
-FLUSH PRIVILEGES;

@@ -12,13 +12,14 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-load_dotenv(dotenv_path=BASE_DIR.parent / '.env')
+dotenvpath = find_dotenv()
+load_dotenv(dotenv_path=dotenvpath)
 
 DATABASE_NAME = os.getenv("DATABASE_NAME", None)
 DATABASE_USERNAME = os.getenv("DATABASE_USERNAME", None)
@@ -100,19 +101,18 @@ WSGI_APPLICATION = 'niab.wsgi.application'
 # }
 
 DATABASES = {
-    "default" : {
-        "ENGINE" : "django.db.backends.mysql",
-        "NAME" : DATABASE_NAME, 
-        "USER" : DATABASE_USERNAME, 
-        "PASSWORD" : DATABASE_PASSWORD, 
-        "HOST" : DATABASE_HOST, 
-        "PORT" : DATABASE_PORT, 
+    "default": {
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": DATABASE_NAME,
+        "USER": DATABASE_USERNAME,
+        "PASSWORD": DATABASE_PASSWORD,
+        "HOST": DATABASE_HOST,
+        "PORT": DATABASE_PORT,
         "OPTIONS": {
             "init_command": "SET sql_mode='STRICT_TRANS_TABLES'",
         }
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -133,10 +133,13 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTHENTICATION_BACKENDS = [
-    'niab_app.views.EmailOrUsernameModelBackend',  # Remplacez par le chemin correct
+    # 'niab_app.views.EmailOrUsernameModelBackend',  
     'django.contrib.auth.backends.ModelBackend',      # Backend par défaut
 ]
 
+SESSION_COOKIE_SECURE = False  # Ne requiert pas HTTPS pour les cookies
+CSRF_COOKIE_SECURE = False     # Ne requiert pas HTTPS pour les cookies CSRF
+APPEND_SLASH = True
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
@@ -174,3 +177,4 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'alghom.ia@gmail.com'
 EMAIL_HOST_PASSWORD = 'wosdxtiuxexloijz'
 
+DEFAULT_TO_EMAIL = 'malek.boumedine@gmail.com'

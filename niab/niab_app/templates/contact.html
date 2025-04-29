@@ -7,6 +7,13 @@
 <div class="bg-gray-900 min-h-screen flex items-center justify-center py-8">
     <div class="bg-gray-800 border border-purple-500/20 rounded-xl shadow-xl p-8 w-full max-w-xl mx-auto">
         <h2 class="text-2xl md:text-5xl font-semibold text-white text-center mb-8">Écrivez-nous !</h2>
+        
+        {% if success %}
+            <div class="bg-green-500 text-white p-4 rounded mb-6 text-center">
+                Merci, votre message a bien été envoyé !
+            </div>
+        {% endif %}
+        
         <form method="POST" class="space-y-6">
             {% csrf_token %}
             <div>

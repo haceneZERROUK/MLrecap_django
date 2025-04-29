@@ -10,6 +10,9 @@ from dotenv import load_dotenv
 import os
 import json
 import datetime
+from .forms import ContactForm
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 # Create your views here.
@@ -94,23 +97,35 @@ def logout_view(request):
 
 
 
-class ContactView(View) : 
-    
+class ContactView(View):
     template_name = "contact.html"
-    context_object_name = "contact"
 
-    def get(self, request) : 
-        
+    def get(self, request):
         return render(request, self.template_name)
-        pass
-    
-    def post(self, request) : 
+
+    def post(self, request):
+        nom = request.POST.get('nom')
+        email = request.POST.get('email')
+        message = request.POST.get('message')
+        subject = f"Nouveau message de contact de {nom}"
+        message_body = f"Nom: {nom}\nEmail: {email}\n\nMessage:\n{message}"
+
+        send_mail(
+            subject,
+            message_body,
+            settings.EMAIL_HOST_USER,  # expéditeur (défini dans settings.py)
+            [settings.DEFAULT_TO_EMAIL],
+            # ['malek.boumedine@gmail.com'],  # destinataire
+            fail_silently=False,
+        )
+
+        # On peut afficher un message de succès ou rediriger
+        context = {"success": True}
+        return render(request, self.template_name, context)
         
-        pass
-
-
-
+    
 UserModel = get_user_model()
+
 
 class EmailOrUsernameModelBackend(ModelBackend):
     """
