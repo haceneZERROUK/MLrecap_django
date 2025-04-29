@@ -60,7 +60,7 @@
                             </div>
 
                             <div class="mb-6">
-                                <p class="text-gray-300">
+                                <p class="text-gray-300 text-xl">
                                     <span class="font-semibold text-purple-400">Prédiction du nombre d'entrées :</span> 
                                     {% if movie.weekly_entrances_pred %}
                                         {{ movie.weekly_entrances_pred }} entrées
@@ -69,7 +69,16 @@
                                     {% endif %}
                                 </p>
                             </div>
-
+                            <div class="mb-6">
+                                <p class="text-gray-300 text-xl">
+                                    <span class="font-semibold text-purple-400">Prédiction de recette pour ce film :</span>
+                                    {% if movie.predicted_revenue %}
+                                        {{ movie.predicted_revenue|floatformat:2 }} €
+                                    {% else %}
+                                        Non disponible
+                                    {% endif %}
+                                </p>
+                            </div>
                             <div class="border-t border-purple-500/20 pt-4">
                                 <h3 class="font-semibold text-purple-400 mb-2">Synopsis</h3>
                                 <p class="text-gray-300">{{ movie.synopsis }}</p>

@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title %}À propos de nous{% endblock %}
+{% block content %}
+<div class="bg-gradient-to-br from-gray-900 to-purple-900 min-h-screen py-16 px-4">
+    <div class="max-w-5xl mx-auto space-y-16">
+
+        <!-- Bloc 1 : Notre vision -->
+        <div class="flex flex-col md:flex-row items-center md:space-x-10 bg-gray-800 rounded-3xl shadow-2xl p-10 border border-purple-400/30">
+            <div class="md:w-1/2 mb-8 md:mb-0 flex justify-center">
+                <img src="https://img.freepik.com/vecteurs-libre/face-particules-degradee-rougeoyante_23-2148292989.jpg?semt=ais_hybrid&w=740"
+                     alt="Vision IA"
+                     class="w-72 h-72 object-cover rounded-2xl shadow-lg border-4 border-purple-500/40 bg-gray-900">
+            </div>
+            <div class="md:w-1/2">
+                <h2 class="text-3xl md:text-4xl font-extrabold mb-6 text-purple-300 tracking-tight">Notre Vision</h2>
+                <p class="text-lg text-gray-200 mb-4">
+                    Chez <span class="font-semibold text-purple-400">New is Always Better</span>, nous croyons en la puissance de l’innovation et des données pour transformer l’expérience cinématographique. 
+                    Notre objectif est de permettre aux cinémas indépendants de rivaliser avec les plus grands, en leur donnant accès à des outils prédictifs performants et à une programmation intelligente.
+                </p>
+                <p class="text-gray-300 mb-4">
+                    Nous sommes convaincus que chaque salle peut devenir un lieu de découverte, d’émotion et de partage, grâce à une sélection de films pertinente et adaptée à son public.
+                </p>
+            </div>
+        </div>
+
+        <!-- Bloc 2 : Notre technologie -->
+        <div class="flex flex-col md:flex-row-reverse items-center md:space-x-10 bg-gray-800 rounded-3xl shadow-2xl p-10 border border-purple-400/30">
+            <div class="md:w-1/2 mb-8 md:mb-0 flex justify-center">
+                <img src="https://img.freepik.com/photos-gratuite/nuage-ai-tete-robot_23-2149739759.jpg?w=740"
+                     alt="Technologie IA"
+                     class="w-72 h-72 object-cover rounded-2xl shadow-lg border-4 border-purple-500/40 bg-gray-900">
+            </div>
+            <div class="md:w-1/2">
+                <h2 class="text-3xl md:text-4xl font-extrabold mb-6 text-purple-300 tracking-tight">Notre Technologie</h2>
+                <p class="text-lg text-gray-200 mb-4">
+                    Nous utilisons des algorithmes avancés d’intelligence artificielle pour analyser les tendances, anticiper les succès et recommander les films les plus adaptés à chaque salle. 
+                    Notre plateforme s’appuie sur des données nationales, des retours du public et l’expertise de professionnels du secteur.
+                </p>
+                <p class="text-gray-300 mb-4">
+                    Grâce à notre solution, chaque semaine, vous bénéficiez de prédictions fiables sur le potentiel d’entrées et de recettes, pour programmer vos films en toute sérénité.
+                </p>
+            </div>
+        </div>
+
+        <!-- Bloc 3 : Notre équipe -->
+        <div class="flex flex-col md:flex-row items-center md:space-x-10 bg-gray-800 rounded-3xl shadow-2xl p-10 border border-purple-400/30">
+            <div class="md:w-1/2 mb-8 md:mb-0 flex justify-center">
+                <img src="https://img.freepik.com/photos-premium/visage-numerique-ecarlate-dote-clarte_124595-4149.jpg?semt=ais_hybrid&w=740"
+                     alt="Équipe"
+                     class="w-72 h-72 object-cover rounded-2xl shadow-lg border-4 border-purple-500/40 bg-gray-900">
+            </div>
+            <div class="md:w-1/2">
+                <h2 class="text-3xl md:text-4xl font-extrabold mb-6 text-purple-300 tracking-tight">Notre Équipe</h2>
+                <p class="text-lg text-gray-200 mb-4">
+                    <span class="font-semibold text-purple-400">New is Always Better</span> réunit des passionnés de cinéma, des data scientists et des développeurs engagés. 
+                    Notre diversité de profils nous permet de comprendre les enjeux du secteur et d’apporter des solutions concrètes et innovantes.
+                </p>
+                <p class="text-gray-300 mb-4">
+                    Nous partageons une même ambition : rendre la programmation cinématographique plus simple, plus efficace et plus accessible à tous les exploitants, quels que soient leur taille et leur public.
+                </p>
+                <p class="text-gray-400">
+                    Envie d’en savoir plus ou de rejoindre l’aventure ? <a href="{% url 'contact' %}" class="text-purple-400 underline hover:text-purple-200">Contactez-nous</a> !
+                </p>
+            </div>
+        </div>
+
+        <!-- Bloc 4 : Notre engagement -->
+        <div class="bg-gray-900 rounded-3xl shadow-xl p-10 border border-purple-400/20 text-center">
+            <h2 class="text-3xl md:text-4xl font-extrabold mb-6 text-purple-300 tracking-tight">Notre Engagement</h2>
+            <p class="text-lg text-gray-200 mb-4 max-w-3xl mx-auto">
+                Nous nous engageons à accompagner les cinémas indépendants dans leur transformation digitale, en leur offrant des outils adaptés, un accompagnement personnalisé et un support réactif.
+            </p>
+            <p class="text-gray-300 mb-4 max-w-3xl mx-auto">
+                Notre équipe reste à l’écoute de vos besoins et de vos retours pour améliorer sans cesse notre solution et vous aider à offrir la meilleure expérience possible à vos spectateurs.
+            </p>
+            <p class="text-gray-400 max-w-3xl mx-auto">
+                Merci de faire confiance à <span class="font-semibold text-purple-400">New is Always Better</span> pour écrire ensemble le futur du cinéma !
+            </p>
+            <p class="text-gray-400">
+                Vous souhaitez en savoir plus ou nous rejoindre ?
+                <a href="{% url 'contact' %}" class="text-purple-400 underline hover:text-purple-200">Contactez-nous</a> !
+            </p>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -10,9 +10,13 @@ from dotenv import load_dotenv
 import os
 import json
 import datetime
-from .forms import ContactForm
+from .forms import ContactForm, GuestUserCreationForm
 from django.core.mail import send_mail
 from django.conf import settings
+from django.utils import timezone
+from datetime import timedelta, datetime
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 
 # Create your views here.
@@ -24,7 +28,12 @@ class DashboardView(View) :
     context_object_name = "dashboard"
     
     def get(self, request):
-        # récupérer tous les films programmés pour avoir les salles occupées
+        if not request.user.is_authenticated:
+            # Affiche la page 401 personnalisée avec le bon code HTTP
+            response = render(request, "401.html", status=401)
+            response['WWW-Authenticate'] = 'Form'
+            return response
+
         all_movies = Movie.objects.all()
         programmed_movies = all_movies.filter(programmed=True)
         programmed_count = programmed_movies.count()
@@ -33,14 +42,21 @@ class DashboardView(View) :
         # récupérer les 10 derniers films
         movies_list = all_movies.order_by('-creation_date')[:10]
 
+        # Ajout de la variable calculée à chaque film
+        for movie in movies_list:
+            if movie.weekly_entrances_pred:
+                movie.predicted_revenue = movie.weekly_entrances_pred * 0.005  # équivalent à (1/2000)*10
+            else:
+                movie.predicted_revenue = None
+
         context = {
             "movies_list": movies_list,
             "programmed_count": programmed_count,
             "occupied_rooms": occupied_rooms
         }
         return render(request, self.template_name, context)        
-        
-        
+
+
     def post(self, request):
         movie_id = request.POST.get("id")
         programmed_room = request.POST.get("programmed_room")
@@ -149,7 +165,85 @@ class EmailOrUsernameModelBackend(ModelBackend):
 
 
 
+class MoviesHistoryView(View):
+    template_name = "predictions_history.html"
+    context_object_name = "predictions_history"
 
+    def get(self, request):
+        # Récupérer toutes les dates de création distinctes, groupées par semaine ISO
+        movies = Movie.objects.all().order_by('-creation_date')
+        weeks = movies.values_list('creation_date', flat=True).distinct()
 
+        # Construire une liste de tuples (année, semaine, date_debut_semaine_mardi)
+        week_choices = set()
+        for d in weeks:
+            iso = d.isocalendar()
+            week_choices.add((iso[0], iso[1]))
+        week_choices_with_dates = []
+        for year, week in week_choices:
+            # Calcule le lundi de la semaine
+            monday = datetime.strptime(f'{year}-W{week}-1', "%G-W%V-%u").date()
+            # Décale d'un jour pour avoir mardi
+            tuesday = monday + timedelta(days=1)
+            week_choices_with_dates.append((year, week, tuesday))
+        week_choices_with_dates = sorted(week_choices_with_dates, reverse=True)
 
+        # Par défaut, afficher la semaine la plus récente
+        selected_year, selected_week = (week_choices_with_dates[0][0], week_choices_with_dates[0][1]) if week_choices_with_dates else (None, None)
+        if 'week' in request.GET:
+            selected = request.GET['week']
+            try:
+                selected_year, selected_week = map(int, selected.split('-W'))
+            except Exception:
+                pass
 
+        # Calculer le début (mardi) et la fin (lundi suivant) de la semaine sélectionnée
+        if selected_year and selected_week:
+            monday = datetime.strptime(f'{selected_year}-W{selected_week}-1', "%G-W%V-%u").date()
+            tuesday = monday + timedelta(days=1)
+            next_monday = monday + timedelta(days=7)
+            movies_list = movies.filter(creation_date__gte=tuesday, creation_date__lt=next_monday)
+        else:
+            movies_list = Movie.objects.none()
+
+        # Compter les films programmés et les salles occupées (si besoin pour le template)
+        programmed_movies = Movie.objects.filter(programmed=True)
+        programmed_count = programmed_movies.count()
+        occupied_rooms = [movie.programmed_room for movie in programmed_movies if movie.programmed_room is not None]
+
+        context = {
+            "week_choices": week_choices_with_dates,
+            "selected_year": selected_year,
+            "selected_week": selected_week,
+            "movies_list": movies_list,
+            "programmed_count": programmed_count,
+            "occupied_rooms": occupied_rooms,
+        }
+        return render(request, self.template_name, context)
+    
+
+def admin_required(user):
+    return user.is_superuser
+
+@method_decorator([login_required, user_passes_test(admin_required)], name='dispatch')
+class CreateGuestUserView(View):
+    template_name = "create_guest_user.html"
+    context_object_name = "create_guest_user"
+
+    def get(self, request):
+        form = GuestUserCreationForm()
+        return render(request, self.template_name, {"form": form})
+
+    def post(self, request):
+        form = GuestUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return render(request, self.template_name, {"form": GuestUserCreationForm(), "success": True})
+        return render(request, self.template_name, {"form": form})
+    
+    
+class AboutUsView(TemplateView):
+    template_name = "about_us.html"
+    context_object_name = "about_us"
+    
+    

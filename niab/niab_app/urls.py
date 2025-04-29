@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import DashboardView, HomePageView, MyLoginView, ContactView
+from .views import DashboardView, HomePageView, MyLoginView, ContactView, MoviesHistoryView, CreateGuestUserView, AboutUsView
 from django.contrib.auth import views as auth_views
 from django.views.generic import TemplateView
 from django.urls import reverse_lazy
@@ -38,9 +38,13 @@ urlpatterns = [
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(
     template_name='password_reset_complete.html'
     ), name='password_reset_complete'),
-
     
+    path('predictions_history/', MoviesHistoryView.as_view(), name='predictions_history'),
     
+    path('create-guest/', CreateGuestUserView.as_view(), name='create_guest_user'),
+    
+    path('about_us/', AboutUsView.as_view(), name='about_us'),
+        
 ]
 
 

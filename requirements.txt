@@ -8,3 +8,4 @@ whitenoise
 azure-identity
 azure-storage-blob 
 schedule
+pytz

@@ -2,13 +2,26 @@
 {% load static %}
 
 {% block content %}
-
-<div class="bg-gray-100 px-2 text-center">
-    <div class="h-screen flex flex-col justify-center items-center">
-        <h1 class="text-8xl font-extrabold text-red-500">500</h1>
-        <p class="text-4xl font-medium text-gray-800">Internal Server Error</p>
-        <p class="text-xl text-gray-800 mt-4">We apologize for the incompetence. Please try again later.</p>
+<div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-purple-900 px-4">
+    <div class="bg-gray-800 rounded-3xl shadow-2xl p-12 max-w-xl w-full border border-purple-400/30 text-center">
+        <div class="flex flex-col items-center space-y-6">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-red-500 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-1.414-1.414A9 9 0 105.636 18.364l1.414 1.414A9 9 0 1018.364 5.636z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 9h.01M15 9h.01M9.5 13a3.5 3.5 0 005 0" />
+            </svg>
+            <h1 class="text-7xl font-extrabold text-red-500 drop-shadow-lg">500</h1>
+            <p class="text-3xl font-bold text-purple-200 mb-2">Oups, un projecteur s'est éteint...</p>
+            <p class="text-lg text-gray-300 mb-4">
+                Une erreur interne s'est produite.<br>
+                Notre équipe technique est déjà sur le coup pour que la séance continue !
+            </p>
+            <a href="{% url 'homepage' %}" class="inline-block mt-4 bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 py-3 rounded-lg transition-colors shadow-lg">
+                Retour à l'accueil
+            </a>
+        </div>
+        <div class="mt-8 text-sm text-gray-500 italic">
+            Si le problème persiste, <a href="{% url 'contact' %}" class="text-purple-400 underline hover:text-purple-200">contactez-nous</a>.
+        </div>
     </div>
 </div>
-
 {% endblock %}

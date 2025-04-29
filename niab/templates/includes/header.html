@@ -30,10 +30,16 @@
                        class="text-gray-300 hover:text-purple-400 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-purple-400 transition-colors">
                         Dashboard
                     </a>
-                    <a href="#" 
+                    <a href="{% url 'predictions_history' %}" 
                        class="text-gray-300 hover:text-purple-400 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-purple-400 transition-colors">
-                        Prédictions
+                        Historique des prédictions
                     </a>
+                    {% if user.is_superuser %}
+                        <a href="{% url 'create_guest_user' %}" 
+                            class="text-gray-300 hover:text-purple-400 inline-flex items-center px-1 pt-1 border-b-2 border-transparent hover:border-purple-400 transition-colors">
+                            Créer compte invité
+                        </a>
+                    {% endif %}
                 </div>
             </div>
 
