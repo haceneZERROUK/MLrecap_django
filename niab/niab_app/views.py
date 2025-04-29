@@ -14,7 +14,7 @@ from .forms import ContactForm, GuestUserCreationForm
 from django.core.mail import send_mail
 from django.conf import settings
 from django.utils import timezone
-from datetime import timedelta, datetime
+from datetime import timedelta
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required, user_passes_test
 
@@ -29,18 +29,32 @@ class DashboardView(View) :
     
     def get(self, request):
         if not request.user.is_authenticated:
-            # Affiche la page 401 personnalisée avec le bon code HTTP
             response = render(request, "401.html", status=401)
             response['WWW-Authenticate'] = 'Form'
             return response
 
         all_movies = Movie.objects.all()
         programmed_movies = all_movies.filter(programmed=True)
+
+        # Récupérer les 10 derniers films
+        movies_list = all_movies.order_by('-creation_date')[:10]
+
+        # Trouver la date de création la plus récente parmi les films programmés
+        if programmed_movies.exists():
+            max_programmed_creation_date = programmed_movies.order_by('-creation_date').first().creation_date
+            # Si un des 10 derniers films est plus récent que les films programmés, on déprogramme tout
+            if any(movie.creation_date > max_programmed_creation_date for movie in movies_list):
+                for movie in programmed_movies:
+                    movie.programmed = False
+                    movie.programmed_room = None
+                    movie.programmation_start_date = None
+                    movie.programmation_end_date = None
+                    movie.save()
+                # Recharger la liste après déprogrammation
+                programmed_movies = all_movies.filter(programmed=True)
+
         programmed_count = programmed_movies.count()
         occupied_rooms = [movie.programmed_room for movie in programmed_movies if movie.programmed_room is not None]
-
-        # récupérer les 10 derniers films
-        movies_list = all_movies.order_by('-creation_date')[:10]
 
         # Ajout de la variable calculée à chaque film
         for movie in movies_list:
@@ -54,8 +68,7 @@ class DashboardView(View) :
             "programmed_count": programmed_count,
             "occupied_rooms": occupied_rooms
         }
-        return render(request, self.template_name, context)        
-
+        return render(request, self.template_name, context)
 
     def post(self, request):
         movie_id = request.POST.get("id")
@@ -182,7 +195,7 @@ class MoviesHistoryView(View):
         week_choices_with_dates = []
         for year, week in week_choices:
             # Calcule le lundi de la semaine
-            monday = datetime.strptime(f'{year}-W{week}-1', "%G-W%V-%u").date()
+            monday = datetime.datetime.strptime(f'{year}-W{week}-1', "%G-W%V-%u").date()
             # Décale d'un jour pour avoir mardi
             tuesday = monday + timedelta(days=1)
             week_choices_with_dates.append((year, week, tuesday))
@@ -199,7 +212,7 @@ class MoviesHistoryView(View):
 
         # Calculer le début (mardi) et la fin (lundi suivant) de la semaine sélectionnée
         if selected_year and selected_week:
-            monday = datetime.strptime(f'{selected_year}-W{selected_week}-1', "%G-W%V-%u").date()
+            monday = datetime.datetime.strptime(f'{selected_year}-W{selected_week}-1', "%G-W%V-%u").date()
             tuesday = monday + timedelta(days=1)
             next_monday = monday + timedelta(days=7)
             movies_list = movies.filter(creation_date__gte=tuesday, creation_date__lt=next_monday)
