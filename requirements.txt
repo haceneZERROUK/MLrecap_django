@@ -1,0 +1,10 @@
+django
+python-dotenv
+django-widget-tweaks
+gunicorn
+mysqlclient
+mysql-connector-python==8.2.0
+whitenoise
+azure-identity
+azure-storage-blob 
+schedule

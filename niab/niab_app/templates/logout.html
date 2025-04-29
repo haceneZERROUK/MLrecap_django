@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Déconnexion{% endblock %}
+
+{% block content %}
+<form action="{% url 'logout' %}" method="post">
+    {% csrf_token %}
+    <button type="submit">Déconnexion</button>
+</form>
+{% endblock %}

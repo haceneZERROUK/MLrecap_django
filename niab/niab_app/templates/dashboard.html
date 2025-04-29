@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}Sorties de la semaine{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-900 py-8">
+    <div class="container mx-auto px-4">
+        <h1 class="text-5xl font-bold text-white mb-8 text-center">
+            Top 10 des sorties de la semaine
+        </h1>
+        
+        {% if user.is_authenticated %}
+            <div class="space-y-8">
+                {% for movie in movies_list %}
+                <div class="bg-gray-800 shadow-xl rounded-lg overflow-hidden border border-purple-500/20">
+                    <div class="flex flex-col md:flex-row">
+                        <!-- Image à gauche -->
+                        <div class="w-full md:w-1/4 relative">
+                            {% if movie.image_url %}
+                            <img class="w-full h-full object-cover absolute inset-0" 
+                                 src="{{ movie.image_url }}" 
+                                 alt="{{ movie.fr_title }}" />
+                            {% else %}
+                            <div class="absolute inset-0 bg-gray-700 flex items-center justify-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 4v16M17 4v16M3 8h4m10 0h4M3 12h18M3 16h4m10 0h4M4 20h16a1 1 0 001-1V5a1 1 0 00-1-1H4a1 1 0 00-1 1v14a1 1 0 001 1z" />
+                                </svg>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Informations à droite -->
+                        <div class="w-full md:w-3/4 p-6">
+                            <div class="flex flex-col md:flex-row justify-between items-start mb-6">
+                                <div>
+                                    <h2 class="text-3xl font-bold text-white mb-2">{{ forloop.counter }}. {{ movie.fr_title }}</h2>
+                                    <p class="text-xl text-gray-400">Titre original : {{ movie.original_title }}</p>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                                <div class="space-y-3">
+                                    <p class="text-gray-300"><span class="font-semibold text-purple-400">Date de sortie :</span> {{ movie.released_date|date:"d/m/Y" }}</p>
+                                    <p class="text-gray-300"><span class="font-semibold text-purple-400">Durée :</span> {{ movie.duration }}</p>
+                                    <p class="text-gray-300"><span class="font-semibold text-purple-400">Réalisateur :</span> {{ movie.director }}</p>
+                                    <p class="text-gray-300"><span class="font-semibold text-purple-400">Scénariste :</span> {{ movie.writer }}</p>
+                                </div>
+                                <div class="space-y-3">
+                                    <p class="text-gray-300"><span class="font-semibold text-purple-400">Distribution :</span> {{ movie.distribution }}</p>
+                                    <p class="text-gray-300"><span class="font-semibold text-purple-400">Nationalité :</span> {{ movie.country }}</p>
+                                    <p class="text-gray-300"><span class="font-semibold text-purple-400">Classification :</span> {{ movie.classification }}</p>
+                                    <p class="text-gray-300"><span class="font-semibold text-purple-400">Catégories :</span> {{ movie.categories }}</p>
+                                </div>
+                            </div>
+
+                            <div class="mb-6">
+                                <p class="text-gray-300"><span class="font-semibold text-purple-400">Casting :</span> {{ movie.casting }}</p>
+                            </div>
+
+                            <div class="mb-6">
+                                <p class="text-gray-300">
+                                    <span class="font-semibold text-purple-400">Prédiction du nombre d'entrées :</span> 
+                                    {% if movie.weekly_entrances_pred %}
+                                        {{ movie.weekly_entrances_pred }} entrées
+                                    {% else %}
+                                        Non disponible
+                                    {% endif %}
+                                </p>
+                            </div>
+
+                            <div class="border-t border-purple-500/20 pt-4">
+                                <h3 class="font-semibold text-purple-400 mb-2">Synopsis</h3>
+                                <p class="text-gray-300">{{ movie.synopsis }}</p>
+                            </div>
+
+                            <div class="mt-6 flex flex-col sm:flex-row gap-4">
+                                <a href="{{ movie.allocine_url }}" target="_blank" 
+                                   class="flex items-center justify-center px-4 py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                                    </svg>
+                                    Voir sur Allociné
+                                </a>
+                                <form method="POST" class="flex-grow sm:flex-grow-0">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="id" value="{{ movie.id }}">
+                                    {% if not movie.programmed %}
+                                        {% if programmed_count < 2 %}
+                                            <div class="flex flex-col sm:flex-row gap-2">
+                                                <!-- Bouton Programmer -->
+                                                <button type="button" 
+                                                        onclick="this.nextElementSibling.classList.remove('hidden'); this.nextElementSibling.nextElementSibling.classList.remove('hidden'); this.classList.add('hidden')"
+                                                        class="w-full sm:w-auto flex items-center justify-center py-3 px-8 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                    </svg>
+                                                    Programmer ce film
+                                                </button>
+                                
+                                                <!-- Liste déroulante (cachée par défaut) -->
+                                                <select name="programmed_room" required
+                                                        class="hidden w-full sm:w-auto py-3 px-8 bg-gray-800 border border-purple-500 text-white rounded-lg focus:outline-none focus:border-purple-600">
+                                                    <option value="">Choisir une salle</option>
+                                                    {% if 1 not in occupied_rooms %}
+                                                        <option value="1">Salle 1</option>
+                                                    {% endif %}
+                                                    {% if 2 not in occupied_rooms %}
+                                                        <option value="2">Salle 2</option>
+                                                    {% endif %}
+                                                </select>
+                                
+                                                <!-- Bouton Valider (caché par défaut) -->
+                                                <button type="submit" 
+                                                        class="hidden w-full sm:w-auto flex items-center justify-center py-3 px-8 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                                                    </svg>
+                                                    Valider
+                                                </button>
+                                            </div>
+                                        {% else %}
+                                            <button disabled class="w-full sm:w-auto flex items-center justify-center py-3 px-8 bg-gray-400 text-white rounded-lg cursor-not-allowed">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                Maximum de films programmés atteint
+                                            </button>
+                                        {% endif %}
+                                    {% else %}
+                                        <div class="flex flex-col gap-2">
+                                            <button type="submit" class="w-full sm:w-auto flex items-center justify-center py-3 px-8 bg-[#4A1D3D] text-white rounded-lg hover:bg-[#3D1832] transition-colors">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                                </svg>
+                                                Déprogrammer
+                                            </button>
+                                            <!-- Indication de la salle -->
+                                            <div class="text-sm text-purple-400 bg-purple-900/20 py-1 px-3 rounded-lg inline-flex items-center">
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                                                </svg>
+                                                Programmé en Salle {{ movie.programmed_room }}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </form>                            
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="bg-gray-800 p-8 rounded-lg shadow-lg text-center border border-purple-500/20">
+                    <p class="text-gray-300 text-xl">Aucun film disponible dans le catalogue</p>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="bg-gray-800 p-8 rounded-lg shadow-lg border-l-4 border-purple-500">
+                <div class="flex items-center text-purple-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                    <h2 class="text-2xl font-bold">Accès refusé!</h2>
+                </div>
+                <p class="mt-4 text-gray-300 text-lg">Vous n'êtes pas autorisé à accéder à cette page.</p>
+                <div class="mt-6">
+                    <a href="{% url 'homepage' %}" class="inline-block bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-lg transition-colors">
+                        Voir les films à l'affiche
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="fr" class="h-full">  <!-- Ajout de la classe h-full -->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}New Is Always Better{% endblock %}</title>
+    <!-- <link rel="stylesheet" href="{% static 'css/style.css' %}"> -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex flex-col min-h-screen bg-gray-900">  <!-- Ajout de min-h-screen -->
+    <header>
+        {% include "includes/header.html" %}
+    </header>
+    <main class="flex-grow">  <!-- Utilisation de flex-grow au lieu de flex-1 -->
+        {% block content %}
+        {% endblock %}
+    </main>
+    {% block footer %}
+        {% include "includes/footer.html" %}
+    {% endblock %}  
+</body>
+</html>
